@@ -7,33 +7,30 @@
 </head>
 <body>
 
-    <h1>🐝 Bee Swarm Progress Tracker</h1>
+<h1>🐝 Bee Swarm Tracker</h1>
 
-    <div class="container">
+<div class="container">
 
-        <!-- INVENTARIO -->
-        <div class="box">
-            <h2>📦 Inventario</h2>
-
-            <input type="text" id="itemName" placeholder="Nombre del item">
-            <input type="number" id="itemAmount" placeholder="Cantidad">
-            <button onclick="addItem()">Agregar</button>
-
-            <ul id="inventoryList"></ul>
-        </div>
-
-        <!-- OBJETIVOS -->
-        <div class="box">
-            <h2>🎯 Objetivos</h2>
-
-            <input type="text" id="goalName" placeholder="Item a crear">
-            <button onclick="addGoal()">Agregar objetivo</button>
-
-            <ul id="goalList"></ul>
-        </div>
-
+    <!-- INVENTARIO -->
+    <div class="box">
+        <h2>📦 Inventario</h2>
+        <div id="inventory"></div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- ITEMS -->
+    <div class="box">
+        <h2>📚 Ítems</h2>
+        <div id="items"></div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="box">
+        <h2>🎯 Objetivos</h2>
+        <div id="goals"></div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
