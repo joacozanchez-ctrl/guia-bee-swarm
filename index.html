@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bee Swarm Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>🐝 Bee Swarm Progress Tracker</h1>
+
+    <div class="container">
+
+        <!-- INVENTARIO -->
+        <div class="box">
+            <h2>📦 Inventario</h2>
+
+            <input type="text" id="itemName" placeholder="Nombre del item">
+            <input type="number" id="itemAmount" placeholder="Cantidad">
+            <button onclick="addItem()">Agregar</button>
+
+            <ul id="inventoryList"></ul>
+        </div>
+
+        <!-- OBJETIVOS -->
+        <div class="box">
+            <h2>🎯 Objetivos</h2>
+
+            <input type="text" id="goalName" placeholder="Item a crear">
+            <button onclick="addGoal()">Agregar objetivo</button>
+
+            <ul id="goalList"></ul>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
