@@ -9,7 +9,7 @@ const itemsData = [
     { name: "Gumdrops" },
     { name: "Coconut" },
 
-    // ===== CRAFTEOS REALES =====
+    // CRAFTEOS
     {
         name: "Red Extract",
         recipe: {
@@ -45,8 +45,6 @@ const itemsData = [
             "Royal Jelly": 10
         }
     },
-
-    // ===== CORREGIDOS =====
     {
         name: "Glitter",
         recipe: {
