@@ -114,7 +114,7 @@ function renderGoals() {
         let missingText = "";
 
         if (item) {
-            const requirements = calculateRequirements(goal);
+            const requirements = calculateRequirements(goal, 1, {});
 
             for (let mat in requirements) {
                 const needed = requirements[mat];
