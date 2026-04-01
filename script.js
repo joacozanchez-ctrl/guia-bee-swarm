@@ -111,4 +111,4 @@ function removeGoal(name) {
 }
 
 // ===== START =====
-init();
+window.onload = init;
