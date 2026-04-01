@@ -24,9 +24,9 @@ function renderInventory() {
         div.className = "item";
 
         div.innerHTML = `
-            <img src="${item.img || ''}" width="32" height="32">
-            <span>${item.name}</span>
-            <div>
+            <span style="font-size:20px;">${item.emoji || "📦"}</span>
+            <span style="margin-left:8px;">${item.name}</span>
+            <div style="margin-left:auto;">
                 <button onclick="changeAmount('${item.name}', -1)">-</button>
                 <input type="number" value="${inventory[item.name]}" 
                        onchange="setAmount('${item.name}', this.value)" style="width:50px;">
@@ -59,8 +59,8 @@ function renderItems() {
         div.className = "item";
 
         div.innerHTML = `
-            <img src="${item.img || ''}" width="32" height="32">
-            <span>${item.name}</span>
+            <span style="font-size:20px;">${item.emoji || "📦"}</span>
+            <span style="margin-left:8px;">${item.name}</span>
             <button onclick="addGoal('${item.name}')">Agregar</button>
         `;
 
@@ -81,7 +81,7 @@ function removeGoal(name) {
     renderGoals();
 }
 
-// ===== 🌳 ÁRBOL VISUAL PRO =====
+// ===== 🌳 ÁRBOL PRO VISUAL =====
 function getRecipeTree(itemName, multiplier = 1, level = 0) {
     const item = itemsData.find(i => i.name === itemName);
     if (!item || !item.recipe) return "";
@@ -97,19 +97,23 @@ function getRecipeTree(itemName, multiplier = 1, level = 0) {
 
         let status = missing === 0 ? "✅" : `❌ ${missing}`;
         let symbol = level === 0 ? "◆" : "•";
-        let color = missing === 0 ? "#4CAF50" : "#FF5252";
+
+        let color = missing === 0 ? "#2e7d32" : "#c62828";
 
         let nameStyle = level === 0
-            ? `font-weight:bold; color:white;`
-            : `color:#ccc;`;
+            ? `font-weight:bold; color:#111;`
+            : `color:#666;`;
+
+        const emoji = subItem?.emoji || "📦";
 
         result += `
-            <div style="margin-left:${level * 18}px;">
+            <div style="margin-left:${level * 20}px; display:flex; align-items:center; gap:6px;">
+                <span>${emoji}</span>
                 <span style="${nameStyle}">
                     ${symbol} ${mat}
-                </span>: 
+                </span>
                 <span style="color:${color}">
-                    ${totalAmount} ${status}
+                    (${totalAmount} ${status})
                 </span>
             </div>
         `;
@@ -140,9 +144,11 @@ function renderGoals() {
 
         div.innerHTML = `
             <div>
-                <img src="${item.img || ''}" width="32" height="32">
-                <strong>${goal}</strong><br>
-                <small>${text || "Sin receta"}</small>
+                <span style="font-size:22px;">${item?.emoji || "🎯"}</span>
+                <strong style="margin-left:8px;">${goal}</strong>
+                <div style="margin-top:5px;">
+                    ${text || "Sin receta"}
+                </div>
             </div>
             <button onclick="removeGoal('${goal}')">X</button>
         `;
