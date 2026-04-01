@@ -40,10 +40,12 @@ function renderInventory() {
 function changeAmount(name, value) {
     inventory[name] = Math.max(0, (inventory[name] || 0) + value);
     renderInventory();
+    renderGoals();
 }
 
 function setAmount(name, value) {
     inventory[name] = Math.max(0, parseInt(value) || 0);
+    renderGoals();
 }
 
 // ===== ITEMS =====
@@ -77,26 +79,39 @@ function removeGoal(name) {
     renderGoals();
 }
 
-// ===== 🔥 CALCULO RECURSIVO =====
-function calculateRequirements(itemName, multiplier = 1, result = {}) {
+// ===== 🌳 ÁRBOL CON COMPARACIÓN =====
+function getRecipeTree(itemName, multiplier = 1) {
     const item = itemsData.find(i => i.name === itemName);
 
-    // Si no existe o no tiene receta → material base
-    if (!item || !item.recipe) {
-        result[itemName] = (result[itemName] || 0) + multiplier;
-        return result;
-    }
+    if (!item || !item.recipe) return null;
+
+    let result = [];
 
     for (let mat in item.recipe) {
-        const amount = item.recipe[mat] * multiplier;
+        const totalAmount = item.recipe[mat] * multiplier;
+        const have = inventory[mat] || 0;
+        const missing = Math.max(0, totalAmount - have);
 
         const subItem = itemsData.find(i => i.name === mat);
 
-        if (subItem && subItem.recipe) {
-            // seguir bajando
-            calculateRequirements(mat, amount, result);
+        let status = "";
+        if (missing === 0) {
+            status = "✅";
         } else {
-            result[mat] = (result[mat] || 0) + amount;
+            status = `❌ faltan ${missing}`;
+        }
+
+        if (subItem && subItem.recipe) {
+            const subTree = getRecipeTree(mat, totalAmount);
+
+            let subText = "";
+            if (subTree) {
+                subText = " (" + subTree.join(" | ") + ")";
+            }
+
+            result.push(`${mat}: ${totalAmount} ${status}${subText}`);
+        } else {
+            result.push(`${mat}: ${totalAmount} ${status}`);
         }
     }
 
@@ -111,21 +126,13 @@ function renderGoals() {
     goals.forEach(goal => {
         const item = itemsData.find(i => i.name === goal);
 
-        let missingText = "";
+        let text = "";
 
-        if (item) {
-            const requirements = calculateRequirements(goal, 1, {});
+        if (item && item.recipe) {
+            const tree = getRecipeTree(goal, 1);
 
-            console.log("Requerimientos de", goal, requirements); // DEBUG
-
-            for (let mat in requirements) {
-                const needed = requirements[mat];
-                const have = inventory[mat] || 0;
-                const missing = Math.max(0, needed - have);
-
-                if (missing > 0) {
-                    missingText += `${mat}: faltan ${missing} | `;
-                }
+            if (tree) {
+                text = tree.join("<br>");
             }
         }
 
@@ -135,7 +142,7 @@ function renderGoals() {
         div.innerHTML = `
             <div>
                 <strong>${goal}</strong><br>
-                <small>${missingText || "✅ Completo"}</small>
+                <small>${text || "Sin receta"}</small>
             </div>
             <button onclick="removeGoal('${goal}')">X</button>
         `;
