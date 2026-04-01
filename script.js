@@ -1,3 +1,4 @@
+console.log(itemsData);
 // ===== STATE =====
 let inventory = {};
 let goals = [];
