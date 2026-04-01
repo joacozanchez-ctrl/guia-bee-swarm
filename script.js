@@ -81,14 +81,12 @@ function removeGoal(name) {
     renderGoals();
 }
 
-// ===== 🌳 ÁRBOL PRO CON INDENTACIÓN =====
+// ===== 🌳 ÁRBOL VISUAL PRO =====
 function getRecipeTree(itemName, multiplier = 1, level = 0) {
     const item = itemsData.find(i => i.name === itemName);
-
     if (!item || !item.recipe) return "";
 
     let result = "";
-    const indent = "&nbsp;".repeat(level * 4);
 
     for (let mat in item.recipe) {
         const totalAmount = item.recipe[mat] * multiplier;
@@ -97,16 +95,27 @@ function getRecipeTree(itemName, multiplier = 1, level = 0) {
 
         const subItem = itemsData.find(i => i.name === mat);
 
-        let status = missing === 0 ? "✅" : `❌ faltan ${missing}`;
+        let status = missing === 0 ? "✅" : `❌ ${missing}`;
+        let symbol = level === 0 ? "◆" : "•";
+        let color = missing === 0 ? "#4CAF50" : "#FF5252";
 
-        result += `${indent}- ${mat}: ${totalAmount} ${status}<br>`;
+        let nameStyle = level === 0
+            ? `font-weight:bold; color:white;`
+            : `color:#ccc;`;
+
+        result += `
+            <div style="margin-left:${level * 18}px;">
+                <span style="${nameStyle}">
+                    ${symbol} ${mat}
+                </span>: 
+                <span style="color:${color}">
+                    ${totalAmount} ${status}
+                </span>
+            </div>
+        `;
 
         if (subItem && subItem.recipe) {
-            const subTree = getRecipeTree(mat, totalAmount, level + 1);
-
-            if (subTree) {
-                result += subTree;
-            }
+            result += getRecipeTree(mat, totalAmount, level + 1);
         }
     }
 
@@ -122,7 +131,6 @@ function renderGoals() {
         const item = itemsData.find(i => i.name === goal);
 
         let text = "";
-
         if (item && item.recipe) {
             text = getRecipeTree(goal, 1);
         }
