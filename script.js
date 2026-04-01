@@ -24,6 +24,7 @@ function renderInventory() {
         div.className = "item";
 
         div.innerHTML = `
+            <img src="${item.img || ''}" width="32" height="32">
             <span>${item.name}</span>
             <div>
                 <button onclick="changeAmount('${item.name}', -1)">-</button>
@@ -58,6 +59,7 @@ function renderItems() {
         div.className = "item";
 
         div.innerHTML = `
+            <img src="${item.img || ''}" width="32" height="32">
             <span>${item.name}</span>
             <button onclick="addGoal('${item.name}')">Agregar</button>
         `;
@@ -79,13 +81,14 @@ function removeGoal(name) {
     renderGoals();
 }
 
-// ===== 🌳 ÁRBOL CON COMPARACIÓN =====
-function getRecipeTree(itemName, multiplier = 1) {
+// ===== 🌳 ÁRBOL PRO CON INDENTACIÓN =====
+function getRecipeTree(itemName, multiplier = 1, level = 0) {
     const item = itemsData.find(i => i.name === itemName);
 
-    if (!item || !item.recipe) return null;
+    if (!item || !item.recipe) return "";
 
-    let result = [];
+    let result = "";
+    const indent = "&nbsp;".repeat(level * 4);
 
     for (let mat in item.recipe) {
         const totalAmount = item.recipe[mat] * multiplier;
@@ -94,24 +97,16 @@ function getRecipeTree(itemName, multiplier = 1) {
 
         const subItem = itemsData.find(i => i.name === mat);
 
-        let status = "";
-        if (missing === 0) {
-            status = "✅";
-        } else {
-            status = `❌ faltan ${missing}`;
-        }
+        let status = missing === 0 ? "✅" : `❌ faltan ${missing}`;
+
+        result += `${indent}- ${mat}: ${totalAmount} ${status}<br>`;
 
         if (subItem && subItem.recipe) {
-            const subTree = getRecipeTree(mat, totalAmount);
+            const subTree = getRecipeTree(mat, totalAmount, level + 1);
 
-            let subText = "";
             if (subTree) {
-                subText = " (" + subTree.join(" | ") + ")";
+                result += subTree;
             }
-
-            result.push(`${mat}: ${totalAmount} ${status}${subText}`);
-        } else {
-            result.push(`${mat}: ${totalAmount} ${status}`);
         }
     }
 
@@ -129,11 +124,7 @@ function renderGoals() {
         let text = "";
 
         if (item && item.recipe) {
-            const tree = getRecipeTree(goal, 1);
-
-            if (tree) {
-                text = tree.join("<br>");
-            }
+            text = getRecipeTree(goal, 1);
         }
 
         const div = document.createElement("div");
@@ -141,6 +132,7 @@ function renderGoals() {
 
         div.innerHTML = `
             <div>
+                <img src="${item.img || ''}" width="32" height="32">
                 <strong>${goal}</strong><br>
                 <small>${text || "Sin receta"}</small>
             </div>
