@@ -1,47 +1,35 @@
-let inventory = {};
-let goals = [];
 
-function addItem() {
-    const name = document.getElementById("itemName").value;
-    const amount = parseInt(document.getElementById("itemAmount").value);
+        if (item.recipe) {
+            for (let mat in item.recipe) {
+                const needed = item.recipe[mat];
+                const have = inventory[mat] || 0;
+                const missing = Math.max(0, needed - have);
 
-    if (!name || isNaN(amount)) return;
+                if (missing > 0) {
+                    missingText += `${mat}: faltan ${missing} | `;
+                }
+            }
+        }
 
-    if (!inventory[name]) {
-        inventory[name] = 0;
-    }
+        const div = document.createElement("div");
+        div.className = "item";
 
-    inventory[name] += amount;
-    renderInventory();
+        div.innerHTML = `
+            <div>
+                <strong>${goal}</strong><br>
+                <small>${missingText || "✅ Completo"}</small>
+            </div>
+            <button onclick="removeGoal('${goal}')">X</button>
+        `;
+
+        container.appendChild(div);
+    });
 }
 
-function renderInventory() {
-    const list = document.getElementById("inventoryList");
-    list.innerHTML = "";
-
-    for (let item in inventory) {
-        const li = document.createElement("li");
-        li.textContent = item + ": " + inventory[item];
-        list.appendChild(li);
-    }
-}
-
-function addGoal() {
-    const goal = document.getElementById("goalName").value;
-
-    if (!goal) return;
-
-    goals.push(goal);
+function removeGoal(name) {
+    goals = goals.filter(g => g !== name);
     renderGoals();
 }
 
-function renderGoals() {
-    const list = document.getElementById("goalList");
-    list.innerHTML = "";
-
-    goals.forEach(goal => {
-        const li = document.createElement("li");
-        li.textContent = goal;
-        list.appendChild(li);
-    });
-}
+// ===== START =====
+init();
